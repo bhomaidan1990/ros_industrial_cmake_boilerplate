@@ -19,7 +19,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        distro: [focal, jammy, noble]
+        distro: [jammy, noble]
     steps:
       - uses: actions/checkout@v4
         with:
