@@ -29,9 +29,11 @@ The following process will generate a Debian or NuGet package leveraging CMake a
 The package should be located in the current directory.
 
 ``` bash
-cd <workspace directory>
-catkin build -DRICB_PACKAGE=ON
-./src/ros_industrial_cmake_boilerplate/.run-cpack
+cd PACKAGE_NAME
+mkdir build && cd build
+rm -rf * && cmake .. -DRICB_PACKAGE=ON -DRICB_PACKAGE_SOURCE=ON
+make -j10 package
+sudo dpkg -i *.deb
 ```
 
 ****************
