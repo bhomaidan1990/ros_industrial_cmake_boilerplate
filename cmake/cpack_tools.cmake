@@ -515,11 +515,11 @@ macro(cpack_debian_source_package)
 
     ##############################################################################
     # debian/compat
-    file(WRITE ${DEBIAN_SOURCE_DIR}/debian/compat "9")
+    file(WRITE ${DEBIAN_SOURCE_DIR}/debian/compat "13")
 
     ##############################################################################
     # debian/source/format
-    file(WRITE ${DEBIAN_SOURCE_DIR}/debian/source/format "3.0 (native)")
+    file(WRITE ${DEBIAN_SOURCE_DIR}/debian/source/format "3.0 (quilt)")
 
     ##############################################################################
     # debian/changelog
@@ -591,20 +591,20 @@ macro(cpack_debian_source_package)
       "/\\\\.codelite/"
       "*~$")
 
-    set(package_file_name "${CPACK_DEBIAN_PACKAGE_NAME}_${DEBIAN_PACKAGE_VERSION}")
+    set(orig_package_file_name "${CPACK_DEBIAN_PACKAGE_NAME}_${CPACK_PACKAGE_VERSION}")
 
     file(WRITE "${CMAKE_BINARY_DIR}/Debian/${DISTRI}/cpack.cmake"
       "set(CPACK_GENERATOR TGZ)\n"
       "set(CPACK_PACKAGE_NAME \"${CPACK_DEBIAN_PACKAGE_NAME}\")\n"
       "set(CPACK_PACKAGE_VERSION \"${CPACK_PACKAGE_VERSION}\")\n"
-      "set(CPACK_PACKAGE_FILE_NAME \"${package_file_name}.orig\")\n"
+      "set(CPACK_PACKAGE_FILE_NAME \"${orig_package_file_name}.orig\")\n"
       "set(CPACK_PACKAGE_DESCRIPTION \"${CPACK_PACKAGE_NAME} Source\")\n"
       "set(CPACK_IGNORE_FILES \"${CPACK_SOURCE_IGNORE_FILES}\")\n"
       "set(CPACK_INSTALLED_DIRECTORIES \"${CPACK_SOURCE_INSTALLED_DIRECTORIES}\")\n"
       "set(CPACK_INCLUDE_TOPLEVEL_DIRECTORY OFF)\n"
       )
 
-    set(orig_file "${CMAKE_BINARY_DIR}/Debian/${DISTRI}/${package_file_name}.orig.tar.gz")
+    set(orig_file "${CMAKE_BINARY_DIR}/Debian/${DISTRI}/${orig_package_file_name}.orig.tar.gz")
 
     add_custom_command(OUTPUT ${orig_file}
       COMMAND cpack --config ${CMAKE_BINARY_DIR}/Debian/${DISTRI}/cpack.cmake
@@ -624,7 +624,7 @@ macro(cpack_debian_source_package)
       )
 
     add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/Debian/${DISTRI}/${DEB_SOURCE_CHANGES}
-      COMMAND ${DEBUILD_EXECUTABLE} --no-tgz-check -S -d
+      COMMAND ${DEBUILD_EXECUTABLE} --no-tgz-check -S -d -us -uc
       WORKING_DIRECTORY ${DEBIAN_SOURCE_DIR}
       )
     add_custom_target(debuild_${DISTRI} ALL
